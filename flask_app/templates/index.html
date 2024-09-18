@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyntaxSage</title>
+    <link rel="icon" type="image/x-icon" href="/flask_app/sage.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <style>
+        /* Custom styles for layout */
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { display: flex; }
+        #editor { width: 50%; height: 400px; }
+        #results { width: 50%; padding: 20px; border-left: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>SyntaxSage</h1>
+    <div class="container">
+        <div id="editor">
+            <textarea id="code" name="code_input"></textarea>
+        </div>
+        <div id="results">
+            <h3>Results</h3>
+            <div id="output">Enter code and run to see results here...</div>
+        </div>
+    </div>
+    <button id="run-code">Run Code</button>
+
+    <!-- Include CodeMirror for code editor experience -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+
+    <script>
+        // Setup CodeMirror
+        var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+            lineNumbers: true,
+            mode: 'python',
+            theme: 'default'
+        });
+
+        // Handle code submission
+        document.getElementById('run-code').addEventListener('click', function () {
+            var codeInput = editor.getValue();
+
+            // Send the code to Flask backend
+            fetch('/run_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'code_input=' + encodeURIComponent(codeInput)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

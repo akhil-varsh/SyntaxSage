@@ -2,6 +2,31 @@
 
 Syntax Sage is an intelligent web application designed to enhance coding education through automated code analysis and feedback. Leveraging CrewAI, it employs a team of AI agents to provide comprehensive insights into submitted code.
 
+## User Interface
+
+Syntax Sage provides an intuitive user interface for code analysis. Below is a screenshot of the main interface:
+
+![Syntax Sage UI](flask_app/SyntaxSage.png)
+
+The interface consists of two main sections:
+
+1. **Code Input (Left Side)**: 
+   - A text area where users can input their Python code.
+   - The image shows a sample Python function for creating a full pyramid pattern.
+   - A "Run Code" button at the bottom to submit the code for analysis.
+
+2. **Agent Outputs (Right Side)**:
+   - Four distinct sections for different types of analysis:
+     - Code Execution Agent
+     - Code Summary Agent
+     - Code Suggestion Agent
+     - Time Complexity Estimation Agent
+   - Each agent provides specialized feedback in its respective section.
+
+This layout allows users to easily input their code and receive comprehensive feedback from multiple perspectives, all in one view.
+
+
+
 ## Features
 
 1. **Automated Code Analysis**: Utilizes a crew of AI agents to analyze submitted code from multiple perspectives.

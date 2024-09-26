@@ -110,11 +110,8 @@ Before you begin, ensure you have met the following requirements:
 
 ## Contributing
 
-Contributions to Syntax Sage are welcome! Please feel free to submit a Pull Request.
+Contributions to Syntax Sage are welcome! 
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 

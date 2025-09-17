@@ -1,36 +1,23 @@
-# SyntaxSage - Streamlit Application Dependencies
-# Core requirements for AI-powered code analysis
+# SyntaxSage - Streamlit Cloud Deployment
+# Minimal, clean dependencies for Streamlit Cloud
 
-# Streamlit framework
+# Core Streamlit framework
 streamlit>=1.28.0
-streamlit-ace>=0.1.1
 
-# HTTP requests for API communication
+# HTTP requests for API communication with Gemma3
 requests>=2.31.0
 
-# Async processing and concurrency
-aiohttp>=3.8.0
-asyncio-throttle>=1.0.2
-
-# Code execution and analysis
-ast-utils>=0.1.0
-pylint>=2.17.0
-
-# Data handling and utilities
-pandas>=2.0.0
-numpy>=1.24.0
-
-# Security and validation
+# Environment variables and configuration
 python-dotenv>=1.0.0
+
+# Async processing for parallel analysis (optional but useful)
+aiohttp>=3.8.0
+
+# Data handling utilities
+pandas>=2.0.0
+
+# For better error handling and validation
 pydantic>=2.0.0
-
-# Optional: Development and testing
-pytest>=7.4.0
-black>=23.0.0
-flake8>=6.0.0
-
-# For Docker health checks
-curl>=0.1.0
 
 crewai==0.76.9
 Flask==3.0.3

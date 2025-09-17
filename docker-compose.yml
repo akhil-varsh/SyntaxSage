@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # Gemma3 AI Model Service
+  gemma3:
+    image: ai/gemma3:4B-Q4_K_M
+    container_name: syntaxsage_gemma3
+    ports:
+      - "8080:8080"
+    environment:
+      - MODEL_NAME=gemma3
+      - API_PORT=8080
+      - MAX_TOKENS=1000
+      - TEMPERATURE=0.7
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+        reservations:
+          memory: 4G
+    networks:
+      - syntaxsage_network
+
+  # SyntaxSage Streamlit Application
+  syntaxsage:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: syntaxsage_app
+    ports:
+      - "8501:8501"
+    environment:
+      - GEMMA_API_URL=http://gemma3:8080
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+    depends_on:
+      gemma3:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - syntaxsage_network
+
+  # Nginx Reverse Proxy (Optional for production)
+  nginx:
+    image: nginx:alpine
+    container_name: syntaxsage_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - syntaxsage
+    restart: unless-stopped
+    networks:
+      - syntaxsage_network
+
+networks:
+  syntaxsage_network:
+    driver: bridge
+
+volumes:
+  gemma3_data:
+    driver: local

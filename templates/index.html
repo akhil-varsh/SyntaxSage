@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyntaxSage - AI-Powered Code Analysis</title>
+    <meta name="description" content="Analyze Python code with AI - Get execution results, summaries, suggestions, and complexity analysis">
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Global Styles */
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Main Layout */
+        .split-screen {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Editor Section */
+        .editor-section {
+            flex: 1;
+            padding: 20px;
+            border-right: 2px solid #333;
+            background-color: #282a36;
+        }
+
+        .editor-section h2 {
+            color: #f8f8f2;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        #editor {
+            height: calc(100vh - 140px);
+            border: 1px solid #44475a;
+            border-radius: 8px;
+        }
+
+        .CodeMirror {
+            height: 100% !important;
+            border-radius: 8px;
+        }
+
+        /* Output Section */
+        .output-section {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .output-section h2 {
+            color: #343a40;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        /* Analysis Result Cards */
+        .result-section {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+            transition: transform 0.2s ease;
+        }
+
+        .result-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .result-section h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 8px;
+        }
+
+        .result-content {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Different colors for different analysis types */
+        .execution { border-left-color: #28a745; }
+        .summary { border-left-color: #17a2b8; }
+        .suggestions { border-left-color: #ffc107; }
+        .complexity { border-left-color: #dc3545; }
+
+        /* Button Styles */
+        .analyze-btn {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            transform: none;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .loading .spinner-border {
+            margin-right: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .split-screen {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .editor-section, .output-section {
+                flex: none;
+                height: 50vh;
+            }
+            
+            #editor {
+                height: calc(50vh - 120px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="split-screen">
+        <!-- Left Side - Code Editor Section -->
+        <div class="editor-section">
+            <h2>🐍 Python Code Editor</h2>
+            <form action="/analyze_code" method="POST" id="codeForm">
+                <label for="code" class="visually-hidden">Python code input</label>
+                <textarea id="code" name="code" class="d-none" aria-label="Hidden textarea for code submission"></textarea>
+                <div id="editor"></div>
+                <button type="submit" class="btn btn-primary analyze-btn">
+                    <i class="fas fa-magic"></i> Analyze Code with AI
+                </button>
+            </form>
+        </div>
+
+        <!-- Right Side - Analysis Results Section -->
+        <div class="output-section">
+            <h2>🔍 AI Analysis Results</h2>
+            
+            <!-- Code Execution Result -->
+            <div class="result-section execution">
+                <h4>⚡ Code Execution Result</h4>
+                <pre id="execution-output" class="result-content">No execution result yet. Write some Python code and click "Analyze Code with AI" to see the output!</pre>
+            </div>
+            
+            <!-- Code Summary -->
+            <div class="result-section summary">
+                <h4>📝 Code Summary</h4>
+                <pre id="summary-output" class="result-content">No code summary yet. The AI will provide a detailed explanation of what your code does once analyzed.</pre>
+            </div>
+            
+            <!-- Optimization Suggestions -->
+            <div class="result-section suggestions">
+                <h4>💡 Improvement Suggestions</h4>
+                <pre id="suggestions-output" class="result-content">No suggestions yet. The AI will suggest ways to improve your code's performance, readability, and best practices.</pre>
+            </div>
+            
+            <!-- Time Complexity Analysis -->
+            <div class="result-section complexity">
+                <h4>⏱️ Time Complexity Analysis</h4>
+                <pre id="complexity-output" class="result-content">No complexity analysis yet. The AI will analyze your code's time and space complexity with Big O notation.</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
+    
+    <script>
+        /**
+         * SyntaxSage JavaScript Application
+         * Handles code editor initialization and analysis form submission
+         */
+
+        // Initialize CodeMirror editor with Python syntax highlighting
+        const editor = CodeMirror(document.getElementById('editor'), {
+            value: `# Welcome to SyntaxSage! 🎉
+# Write your Python code here and let AI analyze it
+
+def fibonacci(n):
+    """Calculate the nth Fibonacci number recursively"""
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Test the function
+for i in range(10):
+    print(f"F({i}) = {fibonacci(i)}")`,
+            mode: 'python',
+            theme: 'dracula',
+            lineNumbers: true,
+            matchBrackets: true,
+            indentUnit: 4,
+            tabSize: 4,
+            lineWrapping: true,
+            autoCloseBrackets: true
+        });
+
+        /**
+         * Display loading animation in result sections
+         * @param {HTMLElement} element - The element to show loading state
+         */
+        function setLoading(element) {
+            element.innerHTML = `
+                <div class="loading">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    AI is analyzing your code...
+                </div>`;
+        }
+
+        /**
+         * Handle form submission and API communication
+         */
+        const form = document.getElementById('codeForm');
+        form.onsubmit = function(event) {
+            event.preventDefault();
+            
+            // Get UI elements
+            const submitButton = form.querySelector('button[type="submit"]');
+            const codeTextarea = document.getElementById('code');
+            
+            // Disable submit button to prevent multiple submissions
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Analyzing...';
+            
+            // Show loading state for all result sections
+            const outputElements = document.querySelectorAll('.result-content');
+            outputElements.forEach(element => setLoading(element));
+            
+            // Get code from CodeMirror editor
+            const code = editor.getValue();
+            codeTextarea.value = code;
+
+            // Validate code input
+            if (!code.trim()) {
+                alert('Please write some Python code to analyze!');
+                resetSubmitButton();
+                return false;
+            }
+
+            // Submit analysis request
+            fetch('/analyze_code', {
+                method: 'POST',
+                body: new FormData(form)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                updateResultSections(html);
+            })
+            .catch(error => {
+                console.error('Analysis error:', error);
+                showError(`Failed to analyze code: ${error.message}`);
+            })
+            .finally(() => {
+                resetSubmitButton();
+            });
+
+            return false;
+        };
+
+        /**
+         * Update result sections with analysis data
+         * @param {string} html - HTML response from server
+         */
+        function updateResultSections(html) {
+            try {
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = html;
+                
+                const analysisResults = tempContainer.querySelector('.analysis-results');
+                if (!analysisResults) {
+                    throw new Error('Invalid response format');
+                }
+
+                // Map section classes to output element IDs
+                const sectionMapping = {
+                    'execution': 'execution-output',
+                    'summary': 'summary-output', 
+                    'suggestions': 'suggestions-output',
+                    'complexity': 'complexity-output'
+                };
+
+                // Update each result section
+                const sections = analysisResults.children;
+                Array.from(sections).forEach(section => {
+                    const sectionClass = section.className.split(' ').find(cls => 
+                        Object.keys(sectionMapping).includes(cls)
+                    );
+                    
+                    if (sectionClass && sectionMapping[sectionClass]) {
+                        const content = section.querySelector('pre.result-content');
+                        const outputElement = document.getElementById(sectionMapping[sectionClass]);
+                        
+                        if (content && outputElement) {
+                            outputElement.innerText = content.innerText;
+                        }
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error updating results:', error);
+                showError('Error processing analysis results');
+            }
+        }
+
+        /**
+         * Show error message in all result sections
+         * @param {string} message - Error message to display
+         */
+        function showError(message) {
+            document.querySelectorAll('.result-content').forEach(element => {
+                element.innerHTML = `<span style="color: #dc3545;">❌ ${message}</span>`;
+            });
+        }
+
+        /**
+         * Reset submit button to original state
+         */
+        function resetSubmitButton() {
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-magic"></i> Analyze Code with AI';
+        }
+
+        // Add keyboard shortcut for code analysis (Ctrl+Enter)
+        document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                event.preventDefault();
+                form.onsubmit(event);
+            }
+        });
+
+    </script>
+    
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+[global]
+# Global configuration
+
+# Disable the warning about running on a public cloud
+showWarningOnDirectExecution = false
+
+# Set the app in wide mode by default
+disableWatchdogWarning = true
+
+[server]
+# Server configuration for Streamlit Cloud
+headless = true
+enableCORS = false
+enableXsrfProtection = false
+maxUploadSize = 200
+
+# Port configuration (will be overridden by Streamlit Cloud)
+port = 8501
+address = "0.0.0.0"
+
+[browser]
+# Browser configuration
+gatherUsageStats = false
+serverAddress = "0.0.0.0"
+serverPort = 8501
+
+[theme]
+# Custom theme colors
+primaryColor = "#1f77b4"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f8f9fa"
+textColor = "#262730"
+font = "sans serif"
+
+[client]
+# Client configuration
+caching = true
+displayEnabled = true
+
+[runner]
+# Runner configuration
+magicEnabled = true
+installTracer = false
+fixMatplotlib = true

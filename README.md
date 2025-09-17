@@ -1,127 +1,188 @@
-# 🧙‍♂️ Syntax Sage
+# 🧙‍♂️ SyntaxSage - AI-Powered Code Analysis Tool
 
-Syntax Sage is an intelligent web application designed to enhance coding education through automated code analysis and feedback. Leveraging CrewAI, it employs a team of AI agents to provide comprehensive insights into submitted code.
+**SyntaxSage** is an intelligent web application that provides comprehensive Python code analysis using AI. Built with Flask and powered by LLaMA 3.1 through Ollama, it offers real-time code execution, intelligent summaries, optimization suggestions, and complexity analysis - all with parallel processing for optimal performance.
 
-## 🖥️ User Interface
+## ✨ Key Features
 
-Syntax Sage provides an intuitive user interface for code analysis. Below is a screenshot of the main interface:
-
-![Syntax Sage UI](flask_app/SyntaxSage.png)
-
-The interface consists of two main sections:
-
-1. **Code Input (Left Side)**: 
-   - A text area where users can input their Python code.
-   - The image shows a sample Python function for creating a full pyramid pattern.
-   - A "Run Code" button at the bottom to submit the code for analysis.
-
-2. **Agent Outputs (Right Side)**:
-   - Four distinct sections for different types of analysis:
-     - Code Execution Agent
-     - Code Summary Agent
-     - Code Suggestion Agent
-     - Time Complexity Estimation Agent
-   - Each agent provides specialized feedback in its respective section.
-
-This layout allows users to easily input their code and receive comprehensive feedback from multiple perspectives, all in one view.
-
-
-
-## ✨ Features
-
-1. **🤖 Automated Code Analysis**: Utilizes a crew of AI agents to analyze submitted code from multiple perspectives.
-2. **🏃‍♂️ Code Compilation and Execution**:  Compiles and executes code, providing immediate output or error messages.
-3. **🔧 Optimization Suggestions**: Analyzes code for optimization opportunities and calculates time and space complexity.
-4. **📚 Comprehensive Explanations**: Generates clear, concise summaries and explanations of code structures and algorithms.
-5. **📊 Performance Tracking**: Monitors and analyzes student coding patterns over time, tracking improvements in various aspects.
+- **⚡ Real-time Code Execution**: Execute Python code safely and capture output
+- **🤖 AI-Powered Analysis**: Comprehensive code analysis using LLaMA 3.1
+- **💡 Smart Suggestions**: Get intelligent optimization and improvement recommendations  
+- **📊 Complexity Analysis**: Understand your code's time and space complexity with Big O notation
+- **🔄 Parallel Processing**: Fast analysis through concurrent execution of multiple AI tasks
+- **🎨 Modern UI**: Clean, responsive interface with syntax highlighting via CodeMirror
+- **⌨️ Developer-Friendly**: Keyboard shortcuts (Ctrl+Enter) for quick analysis
 
 ## 🛠️ Tech Stack
 
-- Backend: Python, Flask
-- AI Framework: CrewAI
-- Language Models: Ollama (llama3.1:latest)
-- Frontend: HTML, CSS (embedded in Flask template)
+- **Backend**: Python 3.7+, Flask
+- **AI Engine**: Ollama with LLaMA 3.1 model
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Code Editor**: CodeMirror with Python syntax highlighting
+- **UI Framework**: Bootstrap 5
+- **Processing**: Concurrent.futures for parallel AI analysis
 
-## 🤖 AI Agents
+## � Quick Start
 
-Syntax Sage employs four specialized AI agents:
+### Prerequisites
 
-1. **👨‍💻 Code Compiler and Executor**: Compiles and executes submitted code accurately.
-2. **🔍 Code Optimization Specialist**: Analyzes code for optimization opportunities and complexity.
-3. **📘 Code Explanation Expert**: Generates clear summaries and explanations of code.
-4. **📈 Student Performance Analyst**:: Monitors and analyzes student coding patterns over time.
+1. **Python 3.7+** installed on your system
+2. **Ollama** installed and running with LLaMA 3.1 model
+   ```bash
+   # Install Ollama from https://ollama.ai
+   ollama pull llama3.1
+   ```
 
-## 📋 Prerequisites
-
-Before you begin, ensure you have met the following requirements:
-
-- Python 3.7+
-- pip (Python package manager)
-- Ollama installed and running with the llama3.1:latest model
-
-## 🚀 Installation
+### Installation
 
 1. **Clone the repository**
-   ```
-   git clone https://github.com/akhil-varsh/SyntaxSage.git
-   ```
-2. **Navigate to Folder**
    ```bash
+   git clone https://github.com/akhil-varsh/SyntaxSage.git
    cd SyntaxSage
    ```
 
-2. **Create a virtual environment (optional but recommended)**
-   ```
+2. **Create virtual environment** (recommended)
+   ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   # Windows
+   venv\Scripts\activate
+   # Linux/Mac
+   source venv/bin/activate
    ```
 
-3. **Install the required packages**
-   ```
-   pip install flask crewai langchain-community
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
    ```
 
-## 🎯 Usage
-
-1. Start the Flask application:
-   ```
+4. **Run the application**
+   ```bash
    python app.py
    ```
 
-2. Open your web browser and navigate to `http://localhost:5000`.
+5. **Open your browser** and navigate to `http://localhost:5000`
 
-3. In the left panel, enter your code in the text area provided.
+## 💻 Usage
 
-4. Click the "Analyze Code" button to submit your code.
+1. **Write Python Code**: Use the built-in editor with syntax highlighting
+2. **Analyze**: Click "Analyze Code with AI" or press `Ctrl+Enter`
+3. **Review Results**: Get four types of analysis:
+   - **Execution Results**: See your code's output
+   - **Code Summary**: AI-generated explanation of functionality
+   - **Improvement Suggestions**: Optimization and best practice recommendations
+   - **Complexity Analysis**: Time and space complexity with Big O notation
 
-5. View the results in the right panel, which will include output from all four AI agents:
-   - Compilation and execution results
-   - Optimization and complexity analysis
-   - Code explanation and summary
-   - Performance tracking insights
+## 🎯 Example Analysis
 
+Input code:
+```python
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
 
-## ⚙️ How It Works
+for i in range(10):
+    print(f"F({i}) = {fibonacci(i)}")
+```
 
-1. When code is submitted, Syntax Sage creates tasks for each AI agent based on the input.
-2. The CrewAI framework orchestrates these agents, allowing them to work together to analyze the code.
-3. Each agent performs its specialized task:
-   - The Code Compiler and Executor compiles and runs the code.
-   - The Code Optimization Specialist analyzes for improvements and complexity.
-   - The Code Explanation Expert provides a clear summary.
-   - The Student Performance Analyst tracks progress over time.
-4. The results from all agents are collected and presented in the user interface.
+SyntaxSage provides:
+- ✅ **Execution**: Shows Fibonacci sequence output
+- 📝 **Summary**: Explains recursive Fibonacci implementation
+- 💡 **Suggestions**: Recommends memoization for optimization
+- ⏱️ **Complexity**: Identifies O(2^n) time complexity issue
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Flask App     │    │   AI Engine     │
+│                 │    │                 │    │                 │
+│ CodeMirror      │◄──►│ Parallel        │◄──►│ Ollama          │
+│ Bootstrap UI    │    │ Processing      │    │ LLaMA 3.1       │
+│ JavaScript      │    │ ThreadPool      │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+### Core Components
+
+- **`app.py`**: Main Flask application with parallel processing
+- **`templates/index.html`**: Modern responsive UI with CodeMirror
+- **`static/css/style.css`**: Custom styling and accessibility features
+- **`requirements.txt`**: Dependency management
+
+## 🔧 Configuration
+
+### Environment Variables
+```bash
+# Optional: Configure Flask settings
+export FLASK_ENV=development
+export FLASK_DEBUG=True
+
+# Optional: Configure Ollama endpoint
+export OLLAMA_HOST=http://localhost:11434
+```
+
+### Ollama Setup
+```bash
+# Ensure Ollama is running
+ollama serve
+
+# Verify LLaMA 3.1 is available
+ollama list
+```
+
+## 🚀 Deployment
+
+### Local Development
+```bash
+python app.py
+```
+
+### Production (with Gunicorn)
+```bash
+pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:5000 app:app
+```
+
+### Docker Deployment
+```dockerfile
+FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+```
 
 ## 🤝 Contributing
 
-Contributions to Syntax Sage are welcome! 
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👏 Acknowledgments
+## � Acknowledgments
 
-- Thanks to the CrewAI team for their powerful AI orchestration framework.
+- **Ollama Team** for the excellent local LLM runtime
+- **LLaMA** team at Meta for the powerful language model
+- **CodeMirror** for the excellent code editor component
+- **Flask** community for the robust web framework
+
+## 📞 Support
+
+- 🐛 **Issues**: [GitHub Issues](https://github.com/akhil-varsh/SyntaxSage/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/akhil-varsh/SyntaxSage/discussions)
+- 📧 **Email**: [Contact the maintainer](mailto:akhil.varsh@example.com)
+
+---
+
+**Made with ❤️ by [Akhil Varsh](https://github.com/akhil-varsh)**
 
 
